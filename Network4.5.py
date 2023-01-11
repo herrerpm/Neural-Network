@@ -1,7 +1,7 @@
+import math
 import random
 import numpy as np
 import Data
-
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -10,6 +10,7 @@ def sigmoid(x):
 def sigmoid_prime(x):
     return x * (1 - x)
 
+random.seed(12)
 
 np.vectorize(sigmoid)
 np.vectorize(sigmoid_prime)
@@ -40,9 +41,10 @@ class Layer:
         self.weight_gradient = None
         self.weights = []
         self.biases = []
+        initialization_range = math.sqrt((6/(expected_inputs + neurons)))
         for neuron in range(neurons):
-            self.weights.append(np.array([random.uniform(-1, 1) for _ in range(expected_inputs)]))
-        self.biases = np.vstack([random.uniform(0, 0.1) for _ in range(neurons)])
+            self.weights.append(np.array([random.uniform(-initialization_range, initialization_range) for _ in range(expected_inputs)]))
+        self.biases = np.vstack(np.zeros(neuron+1))
         self.weights = np.array(self.weights)
 
     def calculate(self, layer_input):
@@ -89,14 +91,13 @@ class Network:
             layer_input = layer.calculate(layer_input)
         return self.layers[-1].output
 
+
     def back_propagation(self, expected_output: int):
         expected_outputs = np.vstack([0] * self.output_layer.neurons)
         expected_outputs[expected_output] = 1
         self.output_layer.error = (2 * (self.output_layer.output - expected_outputs)) * sigmoid_prime(
             self.output_layer.output)
-        self.output_layer.weight_gradient = np.array(
-            [self.output_layer.input * error for error in self.output_layer.error]
-        ).squeeze(axis=2)
+        self.output_layer.weight_gradient = self.output_layer.error @ self.output_layer.input.transpose()
         self.output_layer.bias_gradient = self.output_layer.error
         # Backpropagate
         for layer_index in range(2, len(self.layers)+1):
@@ -105,7 +106,7 @@ class Network:
             weight = self.layers[-layer_index + 1].weights
             layer.error = np.vstack((np.hstack(errors) @ weight)) * sigmoid_prime(layer.output)
             layer.bias_gradient = layer.error
-            layer.weight_gradient = (np.array([np.vstack(layer.input) * error for error in layer.error])).squeeze(axis=2)
+            layer.weight_gradient = layer.error @ layer.input.transpose()
 
     def asses(self, data: [int], output: int):
         self.foward_propagation(data)
@@ -131,13 +132,10 @@ class Network:
             self.asses(np.vstack(image), labels[index])
             gradient += self.get_gradients()
             bias_gradient += self.get_bias_gradients()
-            # self.reset_layers()
-        gradient /= len(data)
-        bias_gradient /= len(data)
+            self.reset_layers()
         for index, layer in enumerate(self.layers):
-            layer.weights += -0.5 * gradient[index]
-        for index, layer in enumerate(self.layers):
-            layer.biases += -0.5 * bias_gradient[index]
+            layer.weights += -(1/len(data) * gradient[index])
+            layer.biases += -(1/ len(data) * bias_gradient[index])
 
     def train(self, dataset, outputs, batch_size):
         data = list(zip(dataset, outputs))
@@ -145,3 +143,7 @@ class Network:
         for index in range(0,len(data), batch_size):
             Neural_Network.batch_training(Data.data[index:index+batch_size],
                                           Data.outputs[index:index+batch_size])
+            print(f'{index//batch_size} / {len(dataset)}')
+
+Neural_Network = Network([784,16,16,10])
+Neural_Network.train(Data.data, Data.outputs, 10)
