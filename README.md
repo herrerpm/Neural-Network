@@ -1,4 +1,4 @@
-# AI
+# Neural Network for Digit Recognition
 
 <div style="text-align: justify">
 
@@ -272,6 +272,50 @@ To see how well the network is doing you can use:
     print(results.count(True)/len(results) * 100)    
 
 It will take a while, but it will show you the percentage of digits it gets right.
+
+# Resources:
+
+The Neural Network series by 3blue1brown:
+
+https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+
+It is pretty good as an introduction to the overall function of a neural network, I recommend watching this series first.
+Grant also has several videos on math subjects animated with his own python library manim, and he also made a series that
+covers multivariable calculus on Khan Academy:
+
+https://www.youtube.com/watch?v=TrcCbdWwCBc&list=PLSQl0a2vh4HC5feHa6Rc5c0wbRTx56nF7
+
+Backpropagation by Brilliant.org:
+
+https://brilliant.org/wiki/backpropagation/
+
+It is a very well explained guide of the backpropagation algorithm, and it covers pretty clearly all of the notation needed.
+
+The backpropagation algorithm by Shree Nayar:
+
+https://www.youtube.com/watch?v=sIX_9n-1UbM
+
+It is a very clear summary of how backpropagation works, with a small Neural Network example.
+
+How to Create a Neural Network (and Train it to Identify Doodles) by Sebastian Lague:
+
+https://www.youtube.com/watch?v=hfMk-kjRv4c&t=2084s
+
+It is a very visual approach on how the whole network works and why the algorithm is done the way it is,
+he also features great videos about computer hardware and electronics, go check it out.
+
+¿Qué es una Red Neuronal? by DotCSV
+
+https://www.youtube.com/watch?v=MRIv2IwFTPg&list=PL-Ogd76BhmcB9OjPucsnc2-piEE96jJDQ
+
+If you understand spanish, or have no problem watching this with subtitles please give it a chance
+as it explains pretty good most concepts of the Neural Network. The part 3.5 covers the derivatives of
+the backpropagation algorithm in a very concise manner.
+
+As for the Data.py module I used the code from osolmaz on stackoverflow for the decode_image_file and the decode_label_file
+functions:
+
+https://stackoverflow.com/questions/24906126/how-to-unpack-pkl-file
 
 </div>
 
